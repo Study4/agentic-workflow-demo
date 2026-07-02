@@ -89,6 +89,31 @@ public class StringUtilsTest {
         assertEquals("", StringUtils.join(null, ","));
         assertEquals("", StringUtils.join(new String[]{}, ","));
     }
-    
-    // No test for padRight - it has a known StringIndexOutOfBoundsException bug
+
+    // --- padRight ---
+
+    @Test
+    public void testPadRight_stringShorterThanWidth() {
+        assertEquals("hi   ", StringUtils.padRight("hi", 5));
+    }
+
+    @Test
+    public void testPadRight_stringEqualsWidth() {
+        assertEquals("hello", StringUtils.padRight("hello", 5));
+    }
+
+    @Test
+    public void testPadRight_nullString() {
+        // null is treated as empty string, result is all-spaces padding
+        assertEquals("     ", StringUtils.padRight(null, 5));
+    }
+
+    @Test
+    public void testPadRight_stringLongerThanWidth_throwsBug() {
+        // Known bug (Issue #7): throws NegativeArraySizeException when str.length() > width
+        // Correct behavior should handle this gracefully (truncate or return as-is).
+        // When fixed, replace assertThrows with the expected output.
+        assertThrows(NegativeArraySizeException.class,
+                () -> StringUtils.padRight("hello world", 3));
+    }
 }
