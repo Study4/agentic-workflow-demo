@@ -84,9 +84,68 @@ public class DateUtilsTest {
         // BUG: milliseconds not reset, but we don't test for it
     }
     
-    // Missing tests:
-    // - isOverdue
-    // - addBusinessDays
-    // - isWithinRange
-    // - edge cases (null inputs, boundary dates)
+    // --- isOverdue ---
+
+    @Test
+    public void testIsOverdue_pastDate() {
+        assertTrue(DateUtils.isOverdue("2020-01-01"));
+    }
+
+    @Test
+    public void testIsOverdue_futureDate() {
+        assertFalse(DateUtils.isOverdue("2099-12-31"));
+    }
+
+    @Test
+    public void testIsOverdue_null() {
+        // Null treated as not overdue (cannot distinguish from "no due date set")
+        assertFalse(DateUtils.isOverdue(null));
+    }
+
+    @Test
+    public void testIsOverdue_invalidDateString() {
+        // Unparseable date treated as not overdue (silent failure in parseDate)
+        assertFalse(DateUtils.isOverdue("not-a-date"));
+    }
+
+    // --- isWithinRange ---
+
+    @Test
+    public void testIsWithinRange_dateInMiddle() {
+        Date start  = new Date(1_000_000L);
+        Date middle = new Date(2_000_000L);
+        Date end    = new Date(3_000_000L);
+        assertTrue(DateUtils.isWithinRange(middle, start, end));
+    }
+
+    @Test
+    public void testIsWithinRange_dateBeforeStart() {
+        Date before = new Date(1_000_000L);
+        Date start  = new Date(2_000_000L);
+        Date end    = new Date(3_000_000L);
+        assertFalse(DateUtils.isWithinRange(before, start, end));
+    }
+
+    @Test
+    public void testIsWithinRange_dateAfterEnd() {
+        Date start = new Date(1_000_000L);
+        Date end   = new Date(2_000_000L);
+        Date after = new Date(3_000_000L);
+        assertFalse(DateUtils.isWithinRange(after, start, end));
+    }
+
+    // --- daysBetween (additional cases) ---
+
+    @Test
+    public void testDaysBetween_exactlyOneWeek() {
+        Date start = new Date(0L);
+        Date end   = new Date(7L * 24 * 60 * 60 * 1000);
+        assertEquals(7, DateUtils.daysBetween(start, end));
+    }
+
+    @Test
+    public void testDaysBetween_sameInstant() {
+        Date d = new Date(12_345_678L);
+        assertEquals(0, DateUtils.daysBetween(d, d));
+    }
 }
