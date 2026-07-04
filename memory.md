@@ -1,16 +1,16 @@
 # Test Improver Memory — Study4/agentic-workflow-demo
 
 ## Last Updated
-2026-07-03 16:11 UTC (Run 28671834478)
+2026-07-04 15:46 UTC (Run 28711293658)
 
 ## Last Run Tasks
-- Task 4: Maintain PRs — PR #44 has no CI failures; no action needed
-- Task 5: Comment on testing issues — commented on #20 and #3
-- Task 6: JaCoCo infrastructure — created PR on branch test-assist/jacoco-coverage-setup (closes #26)
+- Task 3: Created PR (branch: test-assist/addBusinessDays-tests) — 7 tests for DateUtils.addBusinessDays; 3 pin buggy behaviour, 4 verify correct cases
+- Task 3: Filed bug issue for addBusinessDays (skips Friday instead of Sunday)
+- Task 4: PR #44 still open, no CI failures; no action needed
 - Task 7: Monthly Activity Summary — updated issue #45
 
 ## Next Tasks (round-robin)
-Next run should focus on: Task 2 (re-scan backlog), Task 3 (implement test improvements), Task 4 (check JaCoCo PR)
+Next run should focus on: Task 5 (comment on #6, #7, #8), Task 6 (coverage thresholds after JaCoCo merge check)
 
 ## Build/Test/Coverage Commands
 ```
@@ -39,7 +39,7 @@ mvn package -DskipTests -B   # package
   - TaskServiceTest.testGetTaskStatistics (Bug #3, division by zero)
 
 ## Testing Backlog (prioritized)
-1. addBusinessDays bug — skips FRIDAY+SAT instead of SAT+SUN; no tests
+1. ~~addBusinessDays bug~~ — DONE: PR created (test-assist/addBusinessDays-tests), bug issue filed
 2. TaskService.getTaskStatistics / Bug #3 — fix division by zero, then fix test
 3. DateUtils.getQuarter / Bug #6 — off-by-one; test already documents it
 4. Controller tests — 0% effective coverage; @WebMvcTest tests for TaskController, ProjectController
@@ -53,6 +53,7 @@ mvn package -DskipTests -B   # package
 |---|---|---|
 | 2026-07-02 | #44 (branch: test-assist/dateutils-stringutils-missing-coverage) | DateUtils isOverdue/isWithinRange/daysBetween + padRight tests |
 | 2026-07-03 | branch: test-assist/jacoco-coverage-setup | JaCoCo plugin + CI coverage upload (closes #26) |
+| 2026-07-04 | branch: test-assist/addBusinessDays-tests | 7 tests for addBusinessDays: 3 pin buggy behaviour, 4 verify correct; filed companion bug issue |
 
 ## Issue Comments
 | Date | Issue | Summary |
@@ -68,4 +69,4 @@ No specific priorities communicated yet.
 
 ## Backlog Cursor
 - Task 5 (comment on issues): commented on #20, #3; next candidates: #6, #7, #8
-- Task 6 (infrastructure): JaCoCo PR created; next = coverage thresholds (after JaCoCo merges)
+- Task 6 (infrastructure): JaCoCo PR created (protected files — needs manual PR); next = coverage thresholds (after JaCoCo merges)
