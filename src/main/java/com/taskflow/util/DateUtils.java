@@ -125,7 +125,7 @@ public class DateUtils {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         int month = cal.get(Calendar.MONTH); // 0-based
-        return month / 3; // BUG: returns 0-3 instead of 1-4
+        return (month / 3) + 1;
     }
     
     /**
