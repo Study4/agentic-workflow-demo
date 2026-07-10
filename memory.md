@@ -1,15 +1,15 @@
 # Test Improver Memory — Study4/agentic-workflow-demo
 
 ## Last Updated
-2026-07-09 17:05 UTC (Run 29035683334)
+2026-07-10 16:39 UTC (Run 29108050644)
 
 ## Last Run Tasks
-- Task 4: Checked PRs #44, #49, #52, #54, #56 — all open, zero CI check runs, no failures
-- Task 3: Created PR #aw_us_pr (branch: test-assist/userservice-unit-tests) — 27 Mockito unit tests for UserService; 1 bug-pin (role escalation)
-- Task 7: Monthly Activity Summary — updated issue #45
+- Task 2: Refreshed backlog — added TaskService unit tests as next high-value target
+- Task 5: Commented on #16 (TaskService god class) — testing-first approach for refactoring
+- Task 7: Updated monthly activity summary issue #45; fixed PR #59 reference
 
 ## Next Tasks (round-robin)
-Next run should focus on: Task 2 (refresh backlog), Task 5 (comment on open issues), Task 6 (coverage thresholds / infrastructure)
+Next run should focus on: Task 3 (TaskService unit tests — critical before god class refactoring), Task 4 (check PRs), Task 6 (coverage thresholds)
 
 ## Build/Test/Coverage Commands
 ```
@@ -41,21 +41,21 @@ mvn package -DskipTests -B   # package
 - @WebMvcTest needs @MockBean for: TaskService, ProjectRepository (for ProjectController); TaskService (for TaskController); UserService (for UserController)
 - Import ambiguity: when using both `import static org.hamcrest.Matchers.*` and `import static org.mockito.ArgumentMatchers.*`, `any(Class)` is ambiguous. Fix: import Hamcrest selectively
 - Pure Mockito unit tests (@ExtendWith(MockitoExtension.class)) run in <1s, no Spring context needed for services
+- NotificationService is mostly stub code (hardcoded SMTP creds, deleted JavaMail, no-op methods) — low value to test
 
 ## Testing Backlog (prioritized)
 1. ~~addBusinessDays bug~~ — DONE: PR #49, bug issue #50
 2. ~~Controller tests (TaskController)~~ — DONE: 13 @WebMvcTest tests in PR #52
 3. ~~Controller tests (ProjectController)~~ — DONE: 16 @WebMvcTest tests in PR #54
 4. ~~Controller tests (UserController)~~ — DONE: 21 @WebMvcTest tests in PR #56
-5. ~~UserService unit tests~~ — DONE: 27 Mockito tests in PR (branch: test-assist/userservice-unit-tests)
-6. TaskService.getTaskStatistics / Bug #3 — fix division by zero, then fix test
-7. DateUtils.getQuarter / Bug #6 — off-by-one; test already documents it
-8. StringUtils.padRight / Bug #7 — test added (assertThrows); needs fix
-9. StringUtils.sanitize() XSS bypass — commented on #8; needs bug-pin tests for each bypass vector
-10. TaskService god class isolation — no unit tests; only full @SpringBootTest
+5. ~~UserService unit tests~~ — DONE: 27 Mockito tests in PR #59
+6. TaskService unit tests — no Mockito-level tests; needed before god class refactoring (#16)
+7. TaskService.getTaskStatistics / Bug #3 — fix division by zero, then fix test
+8. DateUtils.getQuarter / Bug #6 — off-by-one; test already documents it
+9. StringUtils.padRight / Bug #7 — test added (assertThrows); needs fix
+10. StringUtils.sanitize() XSS bypass — commented on #8; needs bug-pin tests for each bypass vector
 11. Clean up no-assertion tests in TaskServiceTest (Issue #20)
-12. NotificationService — only 11% coverage; worth adding unit tests
-13. Coverage thresholds — after JaCoCo merges, configure minimums (start 20-30%)
+12. Coverage thresholds — after JaCoCo merges, configure minimums (start 20-30%)
 
 ## Completed Work
 | Date | PR/Branch | Description |
@@ -66,7 +66,7 @@ mvn package -DskipTests -B   # package
 | 2026-07-05 | #52 (branch: test-assist/taskcontroller-webmvctest) | 13 @WebMvcTest tests for TaskController; 2 bug-pin tests |
 | 2026-07-06 | #54 (branch: test-assist/projectcontroller-webmvctest) | 16 @WebMvcTest tests for ProjectController; 2 bug-pin tests (200-vs-201, NaN-progress) |
 | 2026-07-07 | #56 (branch: test-assist/usercontroller-webmvctest) | 21 @WebMvcTest tests for UserController; 2 bug-pin tests (200-vs-201 on register, reset token in password-reset response) |
-| 2026-07-09 | PR #aw_us_pr (branch: test-assist/userservice-unit-tests) | 27 Mockito unit tests for UserService; 1 bug-pin (role escalation to admin) |
+| 2026-07-09 | #59 (branch: test-assist/userservice-unit-tests) | 27 Mockito unit tests for UserService; 1 bug-pin (role escalation to admin) |
 
 ## Issue Comments
 | Date | Issue | Summary |
@@ -76,6 +76,7 @@ mvn package -DskipTests -B   # package
 | 2026-07-05 | #6 | One-line getQuarter() fix + call-site audit advice |
 | 2026-07-05 | #7 | Pointed to PR #44 bug-pin test; suggested padRight fix |
 | 2026-07-07 | #8 | Concrete XSS bypass test cases for StringUtils.sanitize(); recommended OWASP Java HTML Sanitizer |
+| 2026-07-10 | #16 | Testing-first approach for TaskService god class refactoring; offered to implement unit tests |
 
 ## Maintainer Priorities
 No specific priorities communicated yet.
@@ -84,5 +85,5 @@ No specific priorities communicated yet.
 - July 2026: Issue #45 (updated)
 
 ## Backlog Cursor
-- Task 5 (comment on issues): commented on #20, #3, #6, #7, #8; next candidates: other open bug/testing issues
+- Task 5 (comment on issues): commented on #20, #3, #6, #7, #8, #16; next candidates: #13 (input validation), #14 (error handling)
 - Task 6 (infrastructure): JaCoCo PR branch exists (test-assist/jacoco-coverage-setup); needs manual PR for protected files (Issue #47); next = coverage thresholds (after JaCoCo merges)
