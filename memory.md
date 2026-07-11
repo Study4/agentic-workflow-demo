@@ -1,15 +1,14 @@
 # Test Improver Memory — Study4/agentic-workflow-demo
 
 ## Last Updated
-2026-07-10 16:39 UTC (Run 29108050644)
+2026-07-11 15:39 UTC (Run 29158161432)
 
 ## Last Run Tasks
-- Task 2: Refreshed backlog — added TaskService unit tests as next high-value target
-- Task 5: Commented on #16 (TaskService god class) — testing-first approach for refactoring
-- Task 7: Updated monthly activity summary issue #45; fixed PR #59 reference
+- Task 3: Created PR (branch: test-assist/taskservice-unit-tests) — 29 Mockito unit tests for TaskService; 1 bug-pin (division-by-zero Bug #3)
+- Task 7: Updated monthly activity summary issue #45
 
 ## Next Tasks (round-robin)
-Next run should focus on: Task 3 (TaskService unit tests — critical before god class refactoring), Task 4 (check PRs), Task 6 (coverage thresholds)
+Next run should focus on: Task 4 (check all open PRs), Task 5 (comment on #13 or #14), Task 6 (coverage thresholds)
 
 ## Build/Test/Coverage Commands
 ```
@@ -42,6 +41,8 @@ mvn package -DskipTests -B   # package
 - Import ambiguity: when using both `import static org.hamcrest.Matchers.*` and `import static org.mockito.ArgumentMatchers.*`, `any(Class)` is ambiguous. Fix: import Hamcrest selectively
 - Pure Mockito unit tests (@ExtendWith(MockitoExtension.class)) run in <1s, no Spring context needed for services
 - NotificationService is mostly stub code (hardcoded SMTP creds, deleted JavaMail, no-op methods) — low value to test
+- User.id is private — use user.setId(id) in tests (not user.id = id)
+- stats.get("total") in getTaskStatistics returns Integer (not Long) — use ((Number)stats.get("total")).intValue() in assertions
 
 ## Testing Backlog (prioritized)
 1. ~~addBusinessDays bug~~ — DONE: PR #49, bug issue #50
@@ -49,8 +50,8 @@ mvn package -DskipTests -B   # package
 3. ~~Controller tests (ProjectController)~~ — DONE: 16 @WebMvcTest tests in PR #54
 4. ~~Controller tests (UserController)~~ — DONE: 21 @WebMvcTest tests in PR #56
 5. ~~UserService unit tests~~ — DONE: 27 Mockito tests in PR #59
-6. TaskService unit tests — no Mockito-level tests; needed before god class refactoring (#16)
-7. TaskService.getTaskStatistics / Bug #3 — fix division by zero, then fix test
+6. ~~TaskService unit tests~~ — DONE: 29 Mockito tests (branch: test-assist/taskservice-unit-tests, PR created this run)
+7. TaskService.getTaskStatistics / Bug #3 — fix division by zero (bug-pin test added in new PR)
 8. DateUtils.getQuarter / Bug #6 — off-by-one; test already documents it
 9. StringUtils.padRight / Bug #7 — test added (assertThrows); needs fix
 10. StringUtils.sanitize() XSS bypass — commented on #8; needs bug-pin tests for each bypass vector
@@ -67,6 +68,7 @@ mvn package -DskipTests -B   # package
 | 2026-07-06 | #54 (branch: test-assist/projectcontroller-webmvctest) | 16 @WebMvcTest tests for ProjectController; 2 bug-pin tests (200-vs-201, NaN-progress) |
 | 2026-07-07 | #56 (branch: test-assist/usercontroller-webmvctest) | 21 @WebMvcTest tests for UserController; 2 bug-pin tests (200-vs-201 on register, reset token in password-reset response) |
 | 2026-07-09 | #59 (branch: test-assist/userservice-unit-tests) | 27 Mockito unit tests for UserService; 1 bug-pin (role escalation to admin) |
+| 2026-07-11 | branch: test-assist/taskservice-unit-tests | 29 Mockito unit tests for TaskService; 1 bug-pin (division-by-zero Bug #3) |
 
 ## Issue Comments
 | Date | Issue | Summary |
