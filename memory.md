@@ -1,15 +1,14 @@
 # Test Improver Memory — Study4/agentic-workflow-demo
 
 ## Last Updated
-2026-07-12 15:39 UTC (Run 29198573282)
+2026-07-13 17:01 UTC (Run 29268501237)
 
 ## Last Run Tasks
-- Task 4: Checked open PRs (#44, #49, #52, #54, #56, #59, #63) — no CI failures found
-- Task 5: Commented on #13 (input validation testing strategy) and #14 (error handler testing strategy)
+- Task 3: Created PR #aw_pr_xss (branch: test-assist/stringutils-sanitize-xss-bugtests) — 8 XSS bypass bug-pin tests for StringUtils.sanitize() (Issue #8)
 - Task 7: Updated monthly activity summary issue #45
 
 ## Next Tasks (round-robin)
-Next run should focus on: Task 3 (implement more tests - coverage thresholds or StringUtils.sanitize XSS tests), Task 6 (coverage thresholds)
+Next run should focus on: Task 4 (check CI on existing PRs), Task 6 (coverage thresholds after JaCoCo merges), Task 2 (review backlog for new opportunities)
 
 ## Build/Test/Coverage Commands
 ```
@@ -44,6 +43,7 @@ mvn package -DskipTests -B   # package
 - NotificationService is mostly stub code (hardcoded SMTP creds, deleted JavaMail, no-op methods) — low value to test
 - User.id is private — use user.setId(id) in tests (not user.id = id)
 - stats.get("total") in getTaskStatistics returns Integer (not Long) — use ((Number)stats.get("total")).intValue() in assertions
+- StringUtils.sanitize() XSS bypass: <SCRIPT> not stripped; <script > (with space) opening not stripped but closing </script> IS stripped; all event handler tags pass through
 
 ## Testing Backlog (prioritized)
 1. ~~addBusinessDays bug~~ — DONE: PR #49, bug issue #50
@@ -52,10 +52,10 @@ mvn package -DskipTests -B   # package
 4. ~~Controller tests (UserController)~~ — DONE: 21 @WebMvcTest tests in PR #56
 5. ~~UserService unit tests~~ — DONE: 27 Mockito tests in PR #59
 6. ~~TaskService unit tests~~ — DONE: 29 Mockito tests in PR #63
-7. TaskService.getTaskStatistics / Bug #3 — fix division by zero (bug-pin test added in PR #63)
-8. DateUtils.getQuarter / Bug #6 — off-by-one; test already documents it
-9. StringUtils.padRight / Bug #7 — test added (assertThrows); needs fix
-10. StringUtils.sanitize() XSS bypass — commented on #8; needs bug-pin tests for each bypass vector
+7. ~~StringUtils.sanitize() XSS bypass~~ — DONE: 8 bug-pin tests in PR #aw_pr_xss (pending number)
+8. TaskService.getTaskStatistics / Bug #3 — fix division by zero (bug-pin test added in PR #63)
+9. DateUtils.getQuarter / Bug #6 — off-by-one; test already documents it
+10. StringUtils.padRight / Bug #7 — test added (assertThrows) in PR #44; needs fix
 11. Clean up no-assertion tests in TaskServiceTest (Issue #20)
 12. Coverage thresholds — after JaCoCo merges, configure minimums (start 20-30%)
 13. Input validation tests (#13) — after feature is implemented
@@ -72,6 +72,7 @@ mvn package -DskipTests -B   # package
 | 2026-07-07 | #56 (branch: test-assist/usercontroller-webmvctest) | 21 @WebMvcTest tests for UserController; 2 bug-pin tests (200-vs-201 on register, reset token in password-reset response) |
 | 2026-07-09 | #59 (branch: test-assist/userservice-unit-tests) | 27 Mockito unit tests for UserService; 1 bug-pin (role escalation to admin) |
 | 2026-07-11 | #63 (branch: test-assist/taskservice-unit-tests) | 29 Mockito unit tests for TaskService; 1 bug-pin (division-by-zero Bug #3) |
+| 2026-07-13 | PR pending (branch: test-assist/stringutils-sanitize-xss-bugtests) | 8 XSS bypass bug-pin tests for StringUtils.sanitize() (Issue #8) |
 
 ## Issue Comments
 | Date | Issue | Summary |
