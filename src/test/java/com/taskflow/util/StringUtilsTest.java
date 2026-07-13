@@ -91,4 +91,78 @@ public class StringUtilsTest {
     }
     
     // No test for padRight - it has a known StringIndexOutOfBoundsException bug
+
+    // -------------------------------------------------------------------------
+    // BUG-PIN TESTS: sanitize() XSS bypass vectors (Issue #8)
+    //
+    // These tests document the *current broken behaviour* so that future changes
+    // will surface if any bypass is accidentally "fixed" while others remain,
+    // and so that a real fix must change ALL of them to assert the cleaned output.
+    //
+    // The sanitize() method only strips literal "<script>" / "</script>" (plus the
+    // Title-case variants).  Every other XSS vector passes through unchanged.
+    // -------------------------------------------------------------------------
+
+    @Test
+    public void testSanitize_imgOnerrorBypass() {
+        // BUG-PIN (Issue #8): <img onerror=...> is not removed — XSS bypass
+        String payload = "<img src=x onerror=alert(1)>";
+        assertEquals(payload, StringUtils.sanitize(payload),
+            "BUG: <img onerror=...> must be stripped but currently passes through unchanged");
+    }
+
+    @Test
+    public void testSanitize_svgOnloadBypass() {
+        // BUG-PIN (Issue #8): <svg onload=...> is not removed — XSS bypass
+        String payload = "<svg onload=alert(1)>";
+        assertEquals(payload, StringUtils.sanitize(payload),
+            "BUG: <svg onload=...> must be stripped but currently passes through unchanged");
+    }
+
+    @Test
+    public void testSanitize_uppercaseScriptNotStripped() {
+        // BUG-PIN (Issue #8): <SCRIPT> (all-caps) is not handled — XSS bypass
+        // Current behaviour: passes through unchanged (neither tag stripped)
+        assertEquals("<SCRIPT>alert(1)</SCRIPT>", StringUtils.sanitize("<SCRIPT>alert(1)</SCRIPT>"),
+            "BUG: all-uppercase <SCRIPT> tag is not stripped");
+    }
+
+    @Test
+    public void testSanitize_mixedCaseScriptNotStripped() {
+        // BUG-PIN (Issue #8): <sCrIpT> mixed-case variant is not handled — XSS bypass
+        assertEquals("<sCrIpT>alert(1)</sCrIpT>", StringUtils.sanitize("<sCrIpT>alert(1)</sCrIpT>"),
+            "BUG: mixed-case <script> tag is not stripped");
+    }
+
+    @Test
+    public void testSanitize_scriptWithSpaceNotStripped() {
+        // BUG-PIN (Issue #8): <script > (trailing space before >) is not handled — XSS bypass
+        // Current behaviour: closing </script> is stripped but opening <script > passes through
+        assertEquals("<script >alert(1)", StringUtils.sanitize("<script >alert(1)</script>"),
+            "BUG: <script > with trailing space is not stripped");
+    }
+
+    @Test
+    public void testSanitize_javascriptProtocolBypass() {
+        // BUG-PIN (Issue #8): javascript: protocol in href is not filtered — XSS bypass
+        String payload = "<a href=\"javascript:alert(1)\">click</a>";
+        assertEquals(payload, StringUtils.sanitize(payload),
+            "BUG: javascript: protocol is not stripped");
+    }
+
+    @Test
+    public void testSanitize_bodyOnloadBypass() {
+        // BUG-PIN (Issue #8): <body onload=...> event handler is not removed — XSS bypass
+        String payload = "<body onload=alert(1)>";
+        assertEquals(payload, StringUtils.sanitize(payload),
+            "BUG: <body onload=...> must be stripped but currently passes through unchanged");
+    }
+
+    @Test
+    public void testSanitize_iframeBypass() {
+        // BUG-PIN (Issue #8): <iframe src=javascript:...> is not removed — XSS bypass
+        String payload = "<iframe src=\"javascript:alert(1)\"></iframe>";
+        assertEquals(payload, StringUtils.sanitize(payload),
+            "BUG: <iframe> tag is not stripped");
+    }
 }
