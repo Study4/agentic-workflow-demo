@@ -1,14 +1,15 @@
 # Test Improver Memory — Study4/agentic-workflow-demo
 
 ## Last Updated
-2026-07-13 17:01 UTC (Run 29268501237)
+2026-07-14 16:03 UTC (Run 29347890959)
 
 ## Last Run Tasks
-- Task 3: Created PR #aw_pr_xss (branch: test-assist/stringutils-sanitize-xss-bugtests) — 8 XSS bypass bug-pin tests for StringUtils.sanitize() (Issue #8)
+- Task 4: Checked 8 open PRs — no CI failures
+- Task 3: Created PR (branch: test-assist/project-model-bug-pin-tests) — 9 bug-pin tests for Project.getProgress() and getMemberIds()
 - Task 7: Updated monthly activity summary issue #45
 
 ## Next Tasks (round-robin)
-Next run should focus on: Task 4 (check CI on existing PRs), Task 6 (coverage thresholds after JaCoCo merges), Task 2 (review backlog for new opportunities)
+Next run should focus on: Task 5 (comment on testing issues), Task 6 (coverage thresholds / JaCoCo status), Task 2 (backlog review)
 
 ## Build/Test/Coverage Commands
 ```
@@ -44,6 +45,9 @@ mvn package -DskipTests -B   # package
 - User.id is private — use user.setId(id) in tests (not user.id = id)
 - stats.get("total") in getTaskStatistics returns Integer (not Long) — use ((Number)stats.get("total")).intValue() in assertions
 - StringUtils.sanitize() XSS bypass: <SCRIPT> not stripped; <script > (with space) opening not stripped but closing </script> IS stripped; all event handler tags pass through
+- Project.getProgress(): taskCount=0 → returns NaN (0.0/0), not 0.0
+- Project.getMemberIds(): null members → NPE; whitespace-padded IDs ("1, 2, 3") → NFE; trailing comma ("1,2,3,") → safe (Java split drops trailing empty tokens)
+- String.split(",") with default limit=0 drops trailing empty strings — "1,2,3," parses as [1,2,3]
 
 ## Testing Backlog (prioritized)
 1. ~~addBusinessDays bug~~ — DONE: PR #49, bug issue #50
@@ -52,14 +56,15 @@ mvn package -DskipTests -B   # package
 4. ~~Controller tests (UserController)~~ — DONE: 21 @WebMvcTest tests in PR #56
 5. ~~UserService unit tests~~ — DONE: 27 Mockito tests in PR #59
 6. ~~TaskService unit tests~~ — DONE: 29 Mockito tests in PR #63
-7. ~~StringUtils.sanitize() XSS bypass~~ — DONE: 8 bug-pin tests in PR #aw_pr_xss (pending number)
-8. TaskService.getTaskStatistics / Bug #3 — fix division by zero (bug-pin test added in PR #63)
-9. DateUtils.getQuarter / Bug #6 — off-by-one; test already documents it
-10. StringUtils.padRight / Bug #7 — test added (assertThrows) in PR #44; needs fix
-11. Clean up no-assertion tests in TaskServiceTest (Issue #20)
-12. Coverage thresholds — after JaCoCo merges, configure minimums (start 20-30%)
-13. Input validation tests (#13) — after feature is implemented
-14. Error handler tests (#14) — after feature is implemented
+7. ~~StringUtils.sanitize() XSS bypass~~ — DONE: 8 bug-pin tests in PR #66
+8. ~~Project.getProgress() / getMemberIds() bugs~~ — DONE: 9 bug-pin tests in PR (branch: test-assist/project-model-bug-pin-tests)
+9. TaskService.getTaskStatistics / Bug #3 — fix division by zero (bug-pin test added in PR #63)
+10. DateUtils.getQuarter / Bug #6 — off-by-one; test already documents it
+11. StringUtils.padRight / Bug #7 — test added (assertThrows) in PR #44; needs fix
+12. Clean up no-assertion tests in TaskServiceTest (Issue #20)
+13. Coverage thresholds — after JaCoCo merges, configure minimums (start 20-30%)
+14. Input validation tests (#13) — after feature is implemented
+15. Error handler tests (#14) — after feature is implemented
 
 ## Completed Work
 | Date | PR/Branch | Description |
@@ -72,7 +77,8 @@ mvn package -DskipTests -B   # package
 | 2026-07-07 | #56 (branch: test-assist/usercontroller-webmvctest) | 21 @WebMvcTest tests for UserController; 2 bug-pin tests (200-vs-201 on register, reset token in password-reset response) |
 | 2026-07-09 | #59 (branch: test-assist/userservice-unit-tests) | 27 Mockito unit tests for UserService; 1 bug-pin (role escalation to admin) |
 | 2026-07-11 | #63 (branch: test-assist/taskservice-unit-tests) | 29 Mockito unit tests for TaskService; 1 bug-pin (division-by-zero Bug #3) |
-| 2026-07-13 | PR pending (branch: test-assist/stringutils-sanitize-xss-bugtests) | 8 XSS bypass bug-pin tests for StringUtils.sanitize() (Issue #8) |
+| 2026-07-13 | #66 (branch: test-assist/stringutils-sanitize-xss-bugtests) | 8 XSS bypass bug-pin tests for StringUtils.sanitize() (Issue #8) |
+| 2026-07-14 | PR pending (branch: test-assist/project-model-bug-pin-tests) | 9 bug-pin tests for Project.getProgress() (NaN on zero tasks) and getMemberIds() (NPE on null, NFE on whitespace) |
 
 ## Issue Comments
 | Date | Issue | Summary |
@@ -93,5 +99,5 @@ No specific priorities communicated yet.
 - July 2026: Issue #45 (updated)
 
 ## Backlog Cursor
-- Task 5 (comment on issues): commented on #20, #3, #6, #7, #8, #16, #13, #14; next candidates: check for any other testing-related open issues
+- Task 5 (comment on issues): commented on #20, #3, #6, #7, #8, #16, #13, #14; next candidates: check for any new testing-related open issues
 - Task 6 (infrastructure): JaCoCo PR branch exists (test-assist/jacoco-coverage-setup); needs manual PR for protected files (Issue #47); next = coverage thresholds (after JaCoCo merges)
