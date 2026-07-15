@@ -1,15 +1,15 @@
 # Test Improver Memory — Study4/agentic-workflow-demo
 
 ## Last Updated
-2026-07-14 16:03 UTC (Run 29347890959)
+2026-07-15 16:08 UTC (Run 29431028385)
 
 ## Last Run Tasks
-- Task 4: Checked 8 open PRs — no CI failures
-- Task 3: Created PR (branch: test-assist/project-model-bug-pin-tests) — 9 bug-pin tests for Project.getProgress() and getMemberIds()
+- Task 5: Commented on #26 (JaCoCo branch ready; how to open PR; coverage threshold next)
+- Task 2: Backlog reviewed — remaining items are bug fixes and post-JaCoCo work
 - Task 7: Updated monthly activity summary issue #45
 
 ## Next Tasks (round-robin)
-Next run should focus on: Task 5 (comment on testing issues), Task 6 (coverage thresholds / JaCoCo status), Task 2 (backlog review)
+Next run should focus on: Task 3 (fix a bug or clean up no-assertion tests), Task 4 (PR maintenance), Task 6 (coverage thresholds after JaCoCo)
 
 ## Build/Test/Coverage Commands
 ```
@@ -20,7 +20,7 @@ mvn package -DskipTests -B   # package
 ```
 - Java 11 source, JDK 17 in CI
 - H2 in-memory DB for tests; DataInitializer seeds data on every @SpringBootTest
-- JaCoCo 0.8.11 added in PR (test-assist/jacoco-coverage-setup)
+- JaCoCo 0.8.11 added in branch test-assist/jacoco-coverage-setup
 
 ## Coverage Baseline (from test-assist/jacoco-coverage-setup branch)
 - Instructions: 1930/4553 = 42% (inflated by DataInitializer executing in @SpringBootTest)
@@ -57,28 +57,28 @@ mvn package -DskipTests -B   # package
 5. ~~UserService unit tests~~ — DONE: 27 Mockito tests in PR #59
 6. ~~TaskService unit tests~~ — DONE: 29 Mockito tests in PR #63
 7. ~~StringUtils.sanitize() XSS bypass~~ — DONE: 8 bug-pin tests in PR #66
-8. ~~Project.getProgress() / getMemberIds() bugs~~ — DONE: 9 bug-pin tests in PR (branch: test-assist/project-model-bug-pin-tests)
-9. TaskService.getTaskStatistics / Bug #3 — fix division by zero (bug-pin test added in PR #63)
-10. DateUtils.getQuarter / Bug #6 — off-by-one; test already documents it
+8. ~~Project.getProgress() / getMemberIds() bugs~~ — DONE: 9 bug-pin tests in PR #68
+9. Coverage thresholds — after JaCoCo merges (branch test-assist/jacoco-coverage-setup, needs maintainer to open PR)
+10. DateUtils.getQuarter / Bug #6 — off-by-one; test documents it; one-line fix available
 11. StringUtils.padRight / Bug #7 — test added (assertThrows) in PR #44; needs fix
-12. Clean up no-assertion tests in TaskServiceTest (Issue #20)
-13. Coverage thresholds — after JaCoCo merges, configure minimums (start 20-30%)
+12. addBusinessDays / Bug #50 — easy one-line fix; tests already in PR #49
+13. Clean up no-assertion tests in TaskServiceTest (Issue #20)
 14. Input validation tests (#13) — after feature is implemented
 15. Error handler tests (#14) — after feature is implemented
 
 ## Completed Work
 | Date | PR/Branch | Description |
 |---|---|---|
-| 2026-07-02 | #44 (branch: test-assist/dateutils-stringutils-missing-coverage) | DateUtils isOverdue/isWithinRange/daysBetween + padRight tests |
+| 2026-07-02 | #44 | DateUtils isOverdue/isWithinRange/daysBetween + padRight tests |
 | 2026-07-03 | branch: test-assist/jacoco-coverage-setup | JaCoCo plugin + CI coverage upload (closes #26) |
-| 2026-07-04 | #49 (branch: test-assist/addBusinessDays-tests) | 7 tests for addBusinessDays: 3 pin buggy behaviour, 4 verify correct; filed companion bug issue #50 |
-| 2026-07-05 | #52 (branch: test-assist/taskcontroller-webmvctest) | 13 @WebMvcTest tests for TaskController; 2 bug-pin tests |
-| 2026-07-06 | #54 (branch: test-assist/projectcontroller-webmvctest) | 16 @WebMvcTest tests for ProjectController; 2 bug-pin tests (200-vs-201, NaN-progress) |
-| 2026-07-07 | #56 (branch: test-assist/usercontroller-webmvctest) | 21 @WebMvcTest tests for UserController; 2 bug-pin tests (200-vs-201 on register, reset token in password-reset response) |
-| 2026-07-09 | #59 (branch: test-assist/userservice-unit-tests) | 27 Mockito unit tests for UserService; 1 bug-pin (role escalation to admin) |
-| 2026-07-11 | #63 (branch: test-assist/taskservice-unit-tests) | 29 Mockito unit tests for TaskService; 1 bug-pin (division-by-zero Bug #3) |
-| 2026-07-13 | #66 (branch: test-assist/stringutils-sanitize-xss-bugtests) | 8 XSS bypass bug-pin tests for StringUtils.sanitize() (Issue #8) |
-| 2026-07-14 | PR pending (branch: test-assist/project-model-bug-pin-tests) | 9 bug-pin tests for Project.getProgress() (NaN on zero tasks) and getMemberIds() (NPE on null, NFE on whitespace) |
+| 2026-07-04 | #49 | 7 tests for addBusinessDays: 3 pin buggy behaviour, 4 verify correct; filed bug #50 |
+| 2026-07-05 | #52 | 13 @WebMvcTest tests for TaskController; 2 bug-pin tests |
+| 2026-07-06 | #54 | 16 @WebMvcTest tests for ProjectController; 2 bug-pin tests |
+| 2026-07-07 | #56 | 21 @WebMvcTest tests for UserController; 2 bug-pin tests |
+| 2026-07-09 | #59 | 27 Mockito unit tests for UserService; 1 bug-pin (role escalation) |
+| 2026-07-11 | #63 | 29 Mockito unit tests for TaskService; 1 bug-pin (division-by-zero Bug #3) |
+| 2026-07-13 | #66 | 8 XSS bypass bug-pin tests for StringUtils.sanitize() (Issue #8) |
+| 2026-07-14 | #68 | 9 bug-pin tests for Project.getProgress() and getMemberIds() |
 
 ## Issue Comments
 | Date | Issue | Summary |
@@ -91,6 +91,7 @@ mvn package -DskipTests -B   # package
 | 2026-07-10 | #16 | Testing-first approach for TaskService god class refactoring; offered to implement unit tests |
 | 2026-07-12 | #13 | @WebMvcTest validation testing strategy; boundary value tests; coordination with #14 |
 | 2026-07-12 | #14 | GlobalExceptionHandler testing strategy; scenario table; no-stack-trace assertion tip |
+| 2026-07-15 | #26 | JaCoCo branch ready; how to open PR; coverage threshold next step |
 
 ## Maintainer Priorities
 No specific priorities communicated yet.
@@ -99,5 +100,5 @@ No specific priorities communicated yet.
 - July 2026: Issue #45 (updated)
 
 ## Backlog Cursor
-- Task 5 (comment on issues): commented on #20, #3, #6, #7, #8, #16, #13, #14; next candidates: check for any new testing-related open issues
-- Task 6 (infrastructure): JaCoCo PR branch exists (test-assist/jacoco-coverage-setup); needs manual PR for protected files (Issue #47); next = coverage thresholds (after JaCoCo merges)
+- Task 5 (comment on issues): commented on #20, #3, #6, #7, #8, #16, #13, #14, #26; next candidates: check for new testing-related issues
+- Task 6 (infrastructure): JaCoCo branch exists (test-assist/jacoco-coverage-setup); blocked on maintainer opening PR; next = coverage thresholds after merge
