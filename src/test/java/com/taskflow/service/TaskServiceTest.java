@@ -97,7 +97,8 @@ public class TaskServiceTest {
     public void testGetAllTasks() {
         List<Task> tasks = taskService.getAllTasks();
         assertNotNull(tasks);
-        // No assertion on content - "just making sure it doesn't crash"
+        // DataInitializer seeds tasks at startup, so the list should be non-empty
+        assertFalse(tasks.isEmpty(), "getAllTasks() should return seeded DataInitializer tasks");
     }
     
     @Test
@@ -208,38 +209,51 @@ public class TaskServiceTest {
         assertTrue(csv.contains("ID,Title")); // Header check only
     }
     
-    // This test has NO assertions - it was added to inflate coverage numbers
+    // These tests have NO assertions - they were added to inflate coverage numbers.
+    // Now replaced with meaningful assertions that verify return-value contracts.
     @Test
     public void testGetTasksByStatus() {
-        taskService.getTasksByStatus(0);
-        taskService.getTasksByStatus(1);
-        taskService.getTasksByStatus(2);
-        // Look, 100% line coverage! But zero actual verification.
+        List<Task> todoTasks = taskService.getTasksByStatus(0);
+        List<Task> inProgressTasks = taskService.getTasksByStatus(1);
+        List<Task> doneTasks = taskService.getTasksByStatus(2);
+
+        assertNotNull(todoTasks);
+        assertNotNull(inProgressTasks);
+        assertNotNull(doneTasks);
+        // Every task returned must actually have the requested status
+        todoTasks.forEach(t -> assertEquals(0, t.status,
+                "getTasksByStatus(0) returned a task with status != 0"));
+        inProgressTasks.forEach(t -> assertEquals(1, t.status,
+                "getTasksByStatus(1) returned a task with status != 1"));
+        doneTasks.forEach(t -> assertEquals(2, t.status,
+                "getTasksByStatus(2) returned a task with status != 2"));
     }
-    
-    // This test has NO assertions either
+
     @Test
     public void testGetTasksByAssignee() {
-        taskService.getTasksByAssignee(1L);
-        taskService.getTasksByAssignee(999L);
+        // user 999 does not exist — expect an empty list, not a crash
+        List<Task> none = taskService.getTasksByAssignee(999L);
+        assertNotNull(none);
+        assertTrue(none.isEmpty(), "Non-existent assignee should yield an empty list");
+
+        // Create a task assigned to a known-absent user and verify retrieval
+        Task task = new Task();
+        task.title = "Assigned Task";
+        task.priority = 1;
+        task.type = "task";
+        task.assignee_id = 42L;
+        Task created = taskService.createTask(task);
+
+        List<Task> assigned = taskService.getTasksByAssignee(42L);
+        assertNotNull(assigned);
+        assertFalse(assigned.isEmpty(), "Should find the task just assigned");
+        assigned.forEach(t -> assertEquals(42L, t.assignee_id,
+                "getTasksByAssignee(42) returned a task with wrong assignee_id"));
+
+        // Cleanup to avoid polluting other tests
+        taskService.deleteTask(created.getId());
     }
     
-    // Empty test that was "going to be implemented later"
-    @Test
-    @Disabled("TODO: implement")
-    public void testAutoAssignTask() {
-        // TODO
-    }
-    
-    @Test
-    @Disabled("TODO: implement")
-    public void testBulkImportWithInvalidData() {
-        // TODO: test with malformed CSV
-    }
-    
-    @Test
-    @Disabled("TODO: implement")
-    public void testConcurrentTaskCreation() {
-        // TODO: test thread safety
-    }
+    // Empty @Disabled tests removed — they added no value and cluttered the suite.
+    // Implement and re-enable when the relevant features are production-ready.
 }
