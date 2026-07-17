@@ -1,15 +1,15 @@
 # Test Improver Memory — Study4/agentic-workflow-demo
 
 ## Last Updated
-2026-07-16 16:02 UTC (Run 29513733794)
+2026-07-17 16:02 UTC (Run 29594462535)
 
 ## Last Run Tasks
-- Task 3: Created PR #70 — fix no-assertion tests in TaskServiceTest (Issue #20)
-- Task 4: Checked all 9 open PRs — no CI failures (no CI configured for PRs)
-- Task 7: Updated monthly activity summary issue #45
+- Task 4: Checked 10 open test-improver PRs — no CI failures
+- Task 2: Backlog reviewed — no new opportunities
+- Task 7: Updated monthly activity summary issue #45 (corrected PR #71)
 
 ## Next Tasks (round-robin)
-Next run should focus on: Task 5 (comment on new testing issues), Task 6 (coverage thresholds if JaCoCo merged), Task 2 (refresh backlog)
+Next run should focus on: Task 3 (new test implementation if anything valuable), Task 5 (check for new comments), Task 6 (coverage thresholds after JaCoCo merges)
 
 ## Build/Test/Coverage Commands
 ```
@@ -48,7 +48,7 @@ mvn package -DskipTests -B   # package
 - Project.getProgress(): taskCount=0 → returns NaN (0.0/0), not 0.0
 - Project.getMemberIds(): null members → NPE; whitespace-padded IDs ("1, 2, 3") → NFE; trailing comma ("1,2,3,") → safe (Java split drops trailing empty tokens)
 - String.split(",") with default limit=0 drops trailing empty strings — "1,2,3," parses as [1,2,3]
-- TaskServiceTest cleanup (PR #70): @SpringBootTest + DataInitializer seeds at context start; use deleteTask() in @AfterEach for tasks you create in the test body; don't use deleteAll() (destroys DataInitializer data for subsequent tests)
+- TaskServiceTest cleanup (PR #71): @SpringBootTest + DataInitializer seeds at context start; use deleteTask() in @AfterEach for tasks you create in the test body; don't use deleteAll() (destroys DataInitializer data for subsequent tests)
 
 ## Testing Backlog (prioritized)
 1. ~~addBusinessDays bug~~ — DONE: PR #49, bug issue #50
@@ -59,7 +59,7 @@ mvn package -DskipTests -B   # package
 6. ~~TaskService unit tests~~ — DONE: 29 Mockito tests in PR #63
 7. ~~StringUtils.sanitize() XSS bypass~~ — DONE: 8 bug-pin tests in PR #66
 8. ~~Project.getProgress() / getMemberIds() bugs~~ — DONE: 9 bug-pin tests in PR #68
-9. ~~Clean up no-assertion tests in TaskServiceTest (Issue #20)~~ — DONE: PR #70
+9. ~~Clean up no-assertion tests in TaskServiceTest (Issue #20)~~ — DONE: PR #71
 10. Coverage thresholds — after JaCoCo merges (branch test-assist/jacoco-coverage-setup, needs maintainer to open PR)
 11. DateUtils.getQuarter / Bug #6 — off-by-one; test documents it; one-line fix available
 12. StringUtils.padRight / Bug #7 — test added (assertThrows) in PR #44; needs fix
@@ -80,7 +80,7 @@ mvn package -DskipTests -B   # package
 | 2026-07-11 | #63 | 29 Mockito unit tests for TaskService; 1 bug-pin (division-by-zero Bug #3) |
 | 2026-07-13 | #66 | 8 XSS bypass bug-pin tests for StringUtils.sanitize() (Issue #8) |
 | 2026-07-14 | #68 | 9 bug-pin tests for Project.getProgress() and getMemberIds() |
-| 2026-07-16 | #70 | Fix no-assertion tests in TaskServiceTest; remove 3 empty TODO stubs |
+| 2026-07-16 | #71 | Fix no-assertion tests in TaskServiceTest; remove 3 empty TODO stubs |
 
 ## Issue Comments
 | Date | Issue | Summary |
@@ -99,7 +99,7 @@ mvn package -DskipTests -B   # package
 No specific priorities communicated yet.
 
 ## Monthly Activity Issues
-- July 2026: Issue #45 (updated)
+- July 2026: Issue #45 (updated 2026-07-17)
 
 ## Backlog Cursor
 - Task 5 (comment on issues): commented on #20, #3, #6, #7, #8, #16, #13, #14, #26; next = check for new testing-related issues or new comments on existing ones
