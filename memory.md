@@ -1,15 +1,14 @@
 # Test Improver Memory — Study4/agentic-workflow-demo
 
 ## Last Updated
-2026-07-17 16:02 UTC (Run 29594462535)
+2026-07-18 15:34 UTC (Run 29650194865)
 
 ## Last Run Tasks
-- Task 4: Checked 10 open test-improver PRs — no CI failures
-- Task 2: Backlog reviewed — no new opportunities
-- Task 7: Updated monthly activity summary issue #45 (corrected PR #71)
+- Task 3: Created PR #73 (model unit tests — User.getDisplayName() + Task.toString() NPE)
+- Task 7: Updated monthly activity summary issue #45
 
 ## Next Tasks (round-robin)
-Next run should focus on: Task 3 (new test implementation if anything valuable), Task 5 (check for new comments), Task 6 (coverage thresholds after JaCoCo merges)
+Next run should focus on: Task 4 (check PR CI status), Task 5 (check for new comments), Task 6 (coverage thresholds after JaCoCo merges)
 
 ## Build/Test/Coverage Commands
 ```
@@ -49,6 +48,8 @@ mvn package -DskipTests -B   # package
 - Project.getMemberIds(): null members → NPE; whitespace-padded IDs ("1, 2, 3") → NFE; trailing comma ("1,2,3,") → safe (Java split drops trailing empty tokens)
 - String.split(",") with default limit=0 drops trailing empty strings — "1,2,3," parses as [1,2,3]
 - TaskServiceTest cleanup (PR #71): @SpringBootTest + DataInitializer seeds at context start; use deleteTask() in @AfterEach for tasks you create in the test body; don't use deleteAll() (destroys DataInitializer data for subsequent tests)
+- User.getDisplayName(): if firstName is set but lastName is null (or vice versa), firstName is silently ignored and method falls back to full_name/username. This is documented in PR #73 bug-pin tests.
+- Task.toString(): calls assignee_id.toString() and due_date.trim() without null checks → NPE on default-constructed Task. Documented in PR #73.
 
 ## Testing Backlog (prioritized)
 1. ~~addBusinessDays bug~~ — DONE: PR #49, bug issue #50
@@ -60,12 +61,14 @@ mvn package -DskipTests -B   # package
 7. ~~StringUtils.sanitize() XSS bypass~~ — DONE: 8 bug-pin tests in PR #66
 8. ~~Project.getProgress() / getMemberIds() bugs~~ — DONE: 9 bug-pin tests in PR #68
 9. ~~Clean up no-assertion tests in TaskServiceTest (Issue #20)~~ — DONE: PR #71
-10. Coverage thresholds — after JaCoCo merges (branch test-assist/jacoco-coverage-setup, needs maintainer to open PR)
-11. DateUtils.getQuarter / Bug #6 — off-by-one; test documents it; one-line fix available
-12. StringUtils.padRight / Bug #7 — test added (assertThrows) in PR #44; needs fix
-13. addBusinessDays / Bug #50 — easy one-line fix; tests already in PR #49
-14. Input validation tests (#13) — after feature is implemented
-15. Error handler tests (#14) — after feature is implemented
+10. ~~User.getDisplayName() + Task.toString() NPE bugs~~ — DONE: 17 tests in PR #73
+11. Coverage thresholds — after JaCoCo merges (branch test-assist/jacoco-coverage-setup, needs maintainer to open PR)
+12. DateUtils.getQuarter / Bug #6 — off-by-one; human PR #61 by giovanni935 already exists
+13. StringUtils.padRight / Bug #7 — test added (assertThrows) in PR #44; needs fix
+14. addBusinessDays / Bug #50 — easy one-line fix; tests already in PR #49
+15. ConfigManager edge cases — getInt/getBoolean with invalid values (low complexity)
+16. Input validation tests (#13) — after feature is implemented
+17. Error handler tests (#14) — after feature is implemented
 
 ## Completed Work
 | Date | PR/Branch | Description |
@@ -81,6 +84,7 @@ mvn package -DskipTests -B   # package
 | 2026-07-13 | #66 | 8 XSS bypass bug-pin tests for StringUtils.sanitize() (Issue #8) |
 | 2026-07-14 | #68 | 9 bug-pin tests for Project.getProgress() and getMemberIds() |
 | 2026-07-16 | #71 | Fix no-assertion tests in TaskServiceTest; remove 3 empty TODO stubs |
+| 2026-07-18 | #73 | 17 model unit tests: User.getDisplayName() (10 tests, 3 bug-pins) + Task.toString() NPE (7 tests, 3 bug-pins) |
 
 ## Issue Comments
 | Date | Issue | Summary |
@@ -99,8 +103,8 @@ mvn package -DskipTests -B   # package
 No specific priorities communicated yet.
 
 ## Monthly Activity Issues
-- July 2026: Issue #45 (updated 2026-07-17)
+- July 2026: Issue #45 (updated 2026-07-18)
 
 ## Backlog Cursor
-- Task 5 (comment on issues): commented on #20, #3, #6, #7, #8, #16, #13, #14, #26; next = check for new testing-related issues or new comments on existing ones
+- Task 5 (comment on issues): commented on #20, #3, #6, #7, #8, #16, #13, #14, #26; next = check for new testing-related issues or new comments on existing ones since 2026-07-17
 - Task 6 (infrastructure): JaCoCo branch exists (test-assist/jacoco-coverage-setup); blocked on maintainer opening PR; next = coverage thresholds after merge
