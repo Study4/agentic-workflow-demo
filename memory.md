@@ -1,15 +1,14 @@
 # Test Improver Memory — Study4/agentic-workflow-demo
 
 ## Last Updated
-2026-07-19 15:35 UTC (Run 29693107791)
+2026-07-20 16:13 UTC (Run 29758486439)
 
 ## Last Run Tasks
-- Task 4: 11 open test-improver PRs verified; PR #73 placeholder resolved to #74
-- Task 3: Created PR #75 (ConfigManager 16 edge-case tests)
-- Task 7: Updated monthly activity summary issue #45
+- Task 5: Checked for new human comments on testing issues — no new engagement
+- Task 7: Updated monthly activity summary; corrected PR #76 reference
 
 ## Next Tasks (round-robin)
-Next run should focus on: Task 5 (check for new comments on testing issues), Task 2 (identify new opportunities), Task 7 (always)
+Next run should focus on: Task 4 (check open PRs for CI failures), Task 2 (verify no new opportunities), Task 7 (always)
 
 ## Build/Test/Coverage Commands
 ```
@@ -64,7 +63,7 @@ mvn package -DskipTests -B   # package
 8. ~~Project.getProgress() / getMemberIds() bugs~~ — DONE: 9 bug-pin tests in PR #68
 9. ~~Clean up no-assertion tests in TaskServiceTest (Issue #20)~~ — DONE: PR #71
 10. ~~User.getDisplayName() + Task.toString() NPE bugs~~ — DONE: 17 tests in PR #74
-11. ~~ConfigManager edge cases~~ — DONE: 16 tests in PR #75
+11. ~~ConfigManager edge cases~~ — DONE: 16 tests in PR #76
 12. Coverage thresholds — after JaCoCo merges (branch test-assist/jacoco-coverage-setup, needs maintainer to open PR)
 13. DateUtils.getQuarter / Bug #6 — off-by-one; human PR #61 by giovanni935 already exists
 14. StringUtils.padRight / Bug #7 — test added (assertThrows) in PR #44; needs fix
@@ -87,7 +86,7 @@ mvn package -DskipTests -B   # package
 | 2026-07-14 | #68 | 9 bug-pin tests for Project.getProgress() and getMemberIds() |
 | 2026-07-16 | #71 | Fix no-assertion tests in TaskServiceTest; remove 3 empty TODO stubs |
 | 2026-07-18 | #74 | 17 model unit tests: User.getDisplayName() (10 tests, 3 bug-pins) + Task.toString() NPE (7 tests, 3 bug-pins) |
-| 2026-07-19 | #75 | 16 ConfigManager edge-case tests (getInt/getBoolean/get with invalid/missing values) |
+| 2026-07-19 | #76 | 16 ConfigManager edge-case tests (getInt/getBoolean/get with invalid/missing values) |
 
 ## Issue Comments
 | Date | Issue | Summary |
@@ -106,8 +105,8 @@ mvn package -DskipTests -B   # package
 No specific priorities communicated yet.
 
 ## Monthly Activity Issues
-- July 2026: Issue #45 (updated 2026-07-19)
+- July 2026: Issue #45 (updated 2026-07-20)
 
 ## Backlog Cursor
-- Task 5 (comment on issues): commented on #20, #3, #6, #7, #8, #16, #13, #14, #26; next = check for new testing-related issues or new human comments on existing ones since 2026-07-18
+- Task 5 (comment on issues): commented on #20, #3, #6, #7, #8, #16, #13, #14, #26; no new human comments on any as of 2026-07-20
 - Task 6 (infrastructure): JaCoCo branch exists (test-assist/jacoco-coverage-setup); blocked on maintainer opening PR; next = coverage thresholds after merge
