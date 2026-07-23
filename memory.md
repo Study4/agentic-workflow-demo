@@ -1,15 +1,14 @@
 # Test Improver Memory — Study4/agentic-workflow-demo
 
 ## Last Updated
-2026-07-22 16:06 UTC (Run 29936378455)
+2026-07-23 16:13 UTC (Run 30024013492)
 
 ## Last Run Tasks
-- Task 4: 13 open test-improver PRs checked — PR #79 confirmed (DatabaseHelper), no CI failures
-- Task 5: Checked for new human comments on issues #16, #20 — no new human engagement
-- Task 7: Updated monthly activity summary; PR #79 added to Suggested Actions
+- Task 3: Created PR for TaskRepository @DataJpaTest tests (14 tests, 2 bug-pins for findActiveTasks/findActiveTasksByAssignee cancelled-task bug)
+- Task 7: Updated monthly activity summary
 
 ## Next Tasks (round-robin)
-Next run should focus on: Task 2/3 (find next testing target, perhaps ProjectService or ProjectRepository), Task 6 (infrastructure), Task 7 (always)
+Next run should focus on: Task 4 (check PR CI status), Task 5 (comment on issues), Task 7 (always)
 
 ## Build/Test/Coverage Commands
 ```
@@ -31,7 +30,9 @@ mvn package -DskipTests -B   # package
 ## Testing Notes
 - Framework: JUnit 5 (junit-jupiter) via spring-boot-starter-test
 - @SpringBootTest integration tests load full context — slow, fragile
+- @DataJpaTest tests JPA slice only (H2, no web layer) — fast, isolated, ~3s for 14 tests
 - DataInitializer auto-seeds data before tests → causes ordering issues in TaskServiceTest
+- Use @DataJpaTest + taskRepository.deleteAll() in @BeforeEach for fully isolated repo tests
 - SimpleDateFormat is NOT thread-safe (used as static field) — Issue #4
 - Test suite has 2 PRE-EXISTING failures on main:
   - DateUtilsTest.testGetQuarter (Bug #6)
@@ -53,6 +54,7 @@ mvn package -DskipTests -B   # package
 - Task.toString(): calls assignee_id.toString() and due_date.trim() without null checks → NPE on default-constructed Task. Documented in PR #74.
 - ConfigManager: singleton, no reset method; access internal Properties via reflection for testing. Boolean.parseBoolean("yes")=false, Boolean.parseBoolean("1")=false — only "true" (case-insensitive) returns true. getInt with decimal/empty string returns default.
 - DatabaseHelper: uses static H2 connection to jdbc:h2:mem:taskflow; shares schema with Spring-managed datasource so @SpringBootTest tests can test it directly. getTasksByUser returns map keys as lowercase strings ("id", "title", etc.). deleteTasks([]) generates "DELETE FROM tasks WHERE id IN ()" — H2 accepts this (returns 0) but MySQL/PostgreSQL throw syntax error. SQL injection present in searchTasks, getTasksByUser, getProjectStats, updateTaskStatus.
+- TaskRepository: findActiveTasks() and findActiveTasksByAssignee() both have FIXME — should exclude status=3 (cancelled) but only exclude status=2 (done). Bug documented in PR #80.
 
 ## Testing Backlog (prioritized)
 1. ~~addBusinessDays bug~~ — DONE: PR #49, bug issue #50
@@ -67,13 +69,14 @@ mvn package -DskipTests -B   # package
 10. ~~User.getDisplayName() + Task.toString() NPE bugs~~ — DONE: 17 tests in PR #74
 11. ~~ConfigManager edge cases~~ — DONE: 16 tests in PR #76
 12. ~~DatabaseHelper SQL injection + empty IN clause bug~~ — DONE: 11 tests in PR #79
-13. Coverage thresholds — after JaCoCo merges (branch test-assist/jacoco-coverage-setup, needs maintainer to open PR)
-14. DateUtils.getQuarter / Bug #6 — off-by-one; human PR #61 by giovanni935 already exists
-15. StringUtils.padRight / Bug #7 — test added (assertThrows) in PR #44; needs fix
-16. addBusinessDays / Bug #50 — easy one-line fix; tests already in PR #49
-17. Input validation tests (#13) — after feature is implemented
-18. Error handler tests (#14) — after feature is implemented
-19. ProjectService unit tests — not yet covered; could be next target
+13. ~~TaskRepository @DataJpaTest~~ — DONE: 14 tests in PR #80 (2 bug-pins: findActiveTasks/findActiveTasksByAssignee cancelled-task bug)
+14. Coverage thresholds — after JaCoCo merges (branch test-assist/jacoco-coverage-setup, needs maintainer to open PR)
+15. DateUtils.getQuarter / Bug #6 — off-by-one; human PR #61 by giovanni935 already exists
+16. StringUtils.padRight / Bug #7 — test added (assertThrows) in PR #44; needs fix
+17. addBusinessDays / Bug #50 — easy one-line fix; tests already in PR #49
+18. Input validation tests (#13) — after feature is implemented
+19. Error handler tests (#14) — after feature is implemented
+20. UserRepository / ProjectRepository custom queries — minimal custom queries, low value
 
 ## Completed Work
 | Date | PR/Branch | Description |
@@ -92,6 +95,7 @@ mvn package -DskipTests -B   # package
 | 2026-07-18 | #74 | 17 model unit tests: User.getDisplayName() (10 tests, 3 bug-pins) + Task.toString() NPE (7 tests, 3 bug-pins) |
 | 2026-07-19 | #76 | 16 ConfigManager edge-case tests (getInt/getBoolean/get with invalid/missing values) |
 | 2026-07-21 | #79 | 11 DatabaseHelper tests (2 bug-pins: SQL injection, empty IN clause portability) |
+| 2026-07-23 | #80 | 14 @DataJpaTest tests for TaskRepository (2 bug-pins: findActiveTasks/findActiveTasksByAssignee cancelled-task bug) |
 
 ## Issue Comments
 | Date | Issue | Summary |
@@ -110,8 +114,8 @@ mvn package -DskipTests -B   # package
 No specific priorities communicated yet.
 
 ## Monthly Activity Issues
-- July 2026: Issue #45 (updated 2026-07-22)
+- July 2026: Issue #45 (updated 2026-07-23)
 
 ## Backlog Cursor
-- Task 5 (comment on issues): commented on #20, #3, #6, #7, #8, #16, #13, #14, #26; no new human comments as of 2026-07-22
+- Task 5 (comment on issues): commented on #20, #3, #6, #7, #8, #16, #13, #14, #26; no new human comments as of 2026-07-23
 - Task 6 (infrastructure): JaCoCo branch exists (test-assist/jacoco-coverage-setup); blocked on maintainer opening PR; next = coverage thresholds after merge
